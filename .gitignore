@@ -12,3 +12,4 @@
 # Local MCP server configuration
 .mcp.json
 /.codex/config.toml
+opencode.json

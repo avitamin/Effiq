@@ -1,0 +1,34 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "jetbrains": {
+      "type": "local",
+      "command": [
+        "/path/to/webstorm/jbr/bin/java",
+        "-classpath",
+        "/path/to/webstorm/mcpserver/lib/mcpserver.jar:/path/to/webstorm/mcpserver/lib/io.modelcontextprotocol.kotlin.sdk.jar:/path/to/webstorm/mcpserver/lib/io.github.oshai.kotlin.logging.jvm.jar:/path/to/webstorm/lib/util-8.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.coroutines.core.jar:/path/to/webstorm/lib/intellij.libraries.ktor.client.cio.jar:/path/to/webstorm/lib/intellij.libraries.ktor.client.jar:/path/to/webstorm/lib/intellij.libraries.ktor.network.tls.jar:/path/to/webstorm/lib/intellij.libraries.ktor.io.jar:/path/to/webstorm/lib/intellij.libraries.ktor.utils.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.io.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.serialization.core.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.serialization.json.jar",
+        "com.intellij.mcpserver.stdio.McpStdioRunnerKt"
+      ],
+      "environment": {
+        "IJ_MCP_SERVER_PORT": "64343"
+      },
+      "enabled": true,
+      "timeout": 10000
+    },
+    "atlassian": {
+      "type": "local",
+      "command": [
+        "uvx",
+        "--python=3.12",
+        "mcp-atlassian"
+      ],
+      "environment": {
+        "READ_ONLY_MODE": "true",
+        "JIRA_URL": "{env:JIRA_URL}",
+        "JIRA_PERSONAL_TOKEN": "{env:JIRA_PERSONAL_TOKEN}"
+      },
+      "enabled": true,
+      "timeout": 30000
+    }
+  }
+}
