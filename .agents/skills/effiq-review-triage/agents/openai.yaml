@@ -1,0 +1,4 @@
+interface:
+  display_name: "Effiq Review Triage"
+  short_description: "Rank reviews by unblock impact"
+  default_prompt: "Use $effiq-review-triage to choose which reviews I should do first."

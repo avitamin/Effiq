@@ -1,0 +1,4 @@
+interface:
+  display_name: "Effiq Weekly Reset"
+  short_description: "Review the week and set next focus"
+  default_prompt: "Use $effiq-weekly-reset to run a weekly reset from Jira, calendar, tasks, and notes."

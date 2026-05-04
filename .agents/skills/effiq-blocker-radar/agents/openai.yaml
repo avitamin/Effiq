@@ -1,0 +1,4 @@
+interface:
+  display_name: "Effiq Blocker Radar"
+  short_description: "Find blockers and dependency risks"
+  default_prompt: "Use $effiq-blocker-radar to find what is blocking development right now."

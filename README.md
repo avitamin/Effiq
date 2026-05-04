@@ -20,6 +20,7 @@ The project goal is to improve day-to-day productivity by giving an AI agent eno
 
 - `AGENTS.md` contains compact guidance for future OpenCode sessions.
 - `docs/repo-documentation-guide.md` defines how project documentation should be maintained.
+- `.agents/skills/` contains repo-local productivity skills for read-only daily planning, blocker detection, review triage, and weekly reset workflows.
 
 ## Agent Notes
 
