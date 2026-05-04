@@ -11,6 +11,19 @@
         "/path/to/webstorm/mcpserver/lib/mcpserver.jar:/path/to/webstorm/mcpserver/lib/io.modelcontextprotocol.kotlin.sdk.jar:/path/to/webstorm/mcpserver/lib/io.github.oshai.kotlin.logging.jvm.jar:/path/to/webstorm/lib/util-8.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.coroutines.core.jar:/path/to/webstorm/lib/intellij.libraries.ktor.client.cio.jar:/path/to/webstorm/lib/intellij.libraries.ktor.client.jar:/path/to/webstorm/lib/intellij.libraries.ktor.network.tls.jar:/path/to/webstorm/lib/intellij.libraries.ktor.io.jar:/path/to/webstorm/lib/intellij.libraries.ktor.utils.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.io.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.serialization.core.jar:/path/to/webstorm/lib/intellij.libraries.kotlinx.serialization.json.jar",
         "com.intellij.mcpserver.stdio.McpStdioRunnerKt"
       ]
+    },
+    "atlassian": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--python=3.12",
+        "mcp-atlassian"
+      ],
+      "env": {
+        "READ_ONLY_MODE": "true",
+        "JIRA_URL": "https://jira.example.com",
+        "JIRA_PERSONAL_TOKEN": "your_jira_personal_token"
+      }
     }
   }
 }
