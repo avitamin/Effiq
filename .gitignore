@@ -8,3 +8,6 @@
 # JetBrains local/sensitive files
 .idea/dataSources.local.xml
 .idea/httpRequests/
+
+# Local MCP server configuration
+.mcp.json
