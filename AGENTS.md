@@ -14,6 +14,7 @@
 
 ## How
 
+- Communicate with the user in Russian by default; keep English technical terms, commands, API names, file paths, class names, and common engineering slang in English when that is clearer.
 - Do not assume a framework, package manager, integration SDK, database, or command set until project files are added and inspected.
 - When source/config files are added, update docs from executable sources first: manifests, workspace config, lockfiles, task runners, CI, and test/lint/typecheck configs.
 - Keep this file compact and universally applicable; move task-specific or detailed guidance into named docs and link to them instead of copying it here.
