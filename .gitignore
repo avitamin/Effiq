@@ -8,8 +8,15 @@
 # JetBrains local/sensitive files
 .idea/dataSources.local.xml
 .idea/httpRequests/
+.idea/db-forest-config.xml
 
 # Local MCP server configuration
 .mcp.json
 /.codex/config.toml
 opencode.json
+
+# Local tool state
+.antigravitycli/
+
+# Local generated artifacts and notes
+.local/

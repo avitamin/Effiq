@@ -16,5 +16,7 @@
 
 - Communicate with the user in Russian by default; keep English technical terms, commands, API names, file paths, class names, and common engineering slang in English when that is clearer.
 - Do not assume a framework, package manager, integration SDK, database, or command set until project files are added and inspected.
+- For factual code review from this repo, use `$effiq-code-review` or `.agents/skills/effiq-code-review/scripts/run-codex-review.sh`; keep `effiq-review-triage` for ranking review work only.
+- AG CMS code review cwd targets are configurable through `--backend-path`, `--frontend-path`, `EFFIQ_AG_CMS_BACKEND_PATH`, and `EFFIQ_AG_CMS_FRONTEND_PATH`; do not commit machine-local absolute paths.
 - When source/config files are added, update docs from executable sources first: manifests, workspace config, lockfiles, task runners, CI, and test/lint/typecheck configs.
 - Keep this file compact and universally applicable; move task-specific or detailed guidance into named docs and link to them instead of copying it here.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Effiq Code Review"
+  short_description: "Run read-only Codex code review"
+  default_prompt: "Use $effiq-code-review to review AG CMS backend and frontend against develop and save Markdown reports."
