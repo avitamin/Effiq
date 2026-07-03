@@ -18,5 +18,10 @@ opencode.json
 # Local tool state
 .antigravitycli/
 
+# Frontend/Rust build output
+node_modules/
+dist/
+src-tauri/target/
+
 # Local generated artifacts and notes
 .local/

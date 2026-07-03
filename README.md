@@ -12,13 +12,69 @@ The project goal is to improve day-to-day productivity by giving an AI agent eno
 
 ## Current Status
 
-- The repository is in an initial documentation-only state.
-- There is no source tree, package manifest, CI workflow, or verified build/test/lint command yet.
-- Product direction is based on the current user-provided intent; implementation architecture is not defined in repo files yet.
+- The repository contains a local Tauri v2 desktop app for configuring, previewing, and running the Effiq Codex code-review workflows.
+- The app uses a dependency-light browser JavaScript frontend and a Rust `src-tauri/` backend.
+- There is no CI workflow yet.
+- Product direction beyond the review runner is still based on current user-provided intent.
+
+## Review Runner App
+
+The desktop app is the operational surface for the existing review scripts:
+
+- `.agents/skills/effiq-code-review/scripts/run-codex-review.sh`
+- `.agents/skills/effiq-code-review/scripts/switch-review-branch.sh`
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+The current frontend has no npm package dependencies; this command verifies the npm project and creates/updates `package-lock.json`.
+
+Run the frontend development server:
+
+```bash
+npm run dev
+```
+
+Run the Tauri desktop app:
+
+```bash
+npm run tauri dev
+```
+
+Build the frontend assets into `dist/`:
+
+```bash
+npm run build
+```
+
+Build the Tauri app in debug mode:
+
+```bash
+npm run tauri build -- --debug
+```
+
+This command uses the Cargo-installed Tauri CLI through `cargo tauri`. The configured Linux bundle targets are `deb` and `rpm`.
+
+Repeatable validation commands from the executable manifests:
+
+```bash
+npm test
+npm run typecheck
+npm run build
+cargo test --manifest-path src-tauri/Cargo.toml
+cargo check --manifest-path src-tauri/Cargo.toml
+npm run tauri build -- --debug
+```
+
+The app delegates review and branch operations to the existing scripts through typed Rust commands. It does not expose generic shell execution to the frontend.
 
 ## Documentation
 
 - `AGENTS.md` contains compact guidance for future Codex/OpenCode sessions.
+- `docs/tauri-review-runner.md` documents the local Tauri review runner app.
 - `docs/repo-documentation-guide.md` defines how project documentation should be maintained.
 - `.agents/skills/` contains repo-local skills for read-only daily planning, blocker detection, review triage, weekly reset, and Codex code review workflows.
 
@@ -41,4 +97,4 @@ By default the Codex process only receives the selected cwd repository. Use `--w
 
 ## Agent Notes
 
-Until source and config files are added, do not assume a framework, package manager, integration SDK, database, or command set. Document those only after they appear in executable project files.
+Use executable project files as the source of truth for commands and architecture: `package.json`, `scripts/`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`.

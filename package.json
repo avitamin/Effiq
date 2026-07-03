@@ -1,0 +1,13 @@
+{
+  "name": "effiq",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev-server.mjs",
+    "build": "node scripts/build.mjs",
+    "typecheck": "node --check src/main.js && node --check src/validation.js && node --check src/uiState.js && node --check src/tauriApi.js && node --check scripts/build.mjs && node --check scripts/dev-server.mjs",
+    "test": "node --test src/*.test.js",
+    "tauri": "cargo tauri"
+  }
+}
