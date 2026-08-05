@@ -12,6 +12,7 @@
 - `README.md` owns the project overview, goals, current status, and quick-start expectations.
 - `AGENTS.md` owns compact instructions for future OpenCode sessions.
 - `docs/tauri-review-runner.md` owns durable usage, validation, and security notes for the local Tauri review runner app.
+- `docs/codex-subagents.md` owns durable usage, role routing, fallback, validation, and security notes for the Codex daily-focus swarm.
 - `docs/repo-documentation-guide.md` owns documentation rules, source priority, verification expectations, and indexing policy.
 
 ## Verification Matrix
@@ -20,7 +21,7 @@
 - Build, test, lint, typecheck, and package-manager commands: verify only from manifests, task runners, lockfiles, or CI before documenting.
 - Tauri app commands: verify from `package.json`, `scripts/`, `src-tauri/Cargo.toml`, and `src-tauri/tauri.conf.json`.
 - Architecture and entrypoints: verify from source files and executable config before documenting.
-- Agent workflow constraints: verify from `AGENTS.md` and repository-local OpenCode config if added later.
+- Agent workflow constraints: verify from `AGENTS.md`, `.agents/skills/`, `.codex/config.example.toml`, `.codex/agents/`, and runtime child metadata. Config parsing alone is not runtime routing proof.
 
 ## Indexing Policy
 

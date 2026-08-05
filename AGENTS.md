@@ -18,6 +18,7 @@
 - Communicate with the user in Russian by default; keep English technical terms, commands, API names, file paths, class names, and common engineering slang in English when that is clearer.
 - Verify framework, package manager, and command facts from `package.json`, `src-tauri/Cargo.toml`, `src-tauri/tauri.conf.json`, and lockfiles.
 - For factual code review from this repo, use `$effiq-code-review` or `.agents/skills/effiq-code-review/scripts/run-codex-review.sh`; keep `effiq-review-triage` for ranking review work only.
+- For an on-demand personal daily plan, use `$effiq-daily-focus`; its project-scoped read-only swarm and runtime gates are documented in `docs/codex-subagents.md`.
 - AG CMS code review cwd targets are configurable through `--backend-path`, `--frontend-path`, `EFFIQ_AG_CMS_BACKEND_PATH`, and `EFFIQ_AG_CMS_FRONTEND_PATH`; do not commit machine-local absolute paths.
 - When source/config files are added, update docs from executable sources first: manifests, workspace config, lockfiles, task runners, CI, and test/lint/typecheck configs.
 - Keep this file compact and universally applicable; move task-specific or detailed guidance into named docs and link to them instead of copying it here.
