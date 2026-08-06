@@ -34,8 +34,8 @@ Before spawning, verify that the effective parent sandbox is read-only and that 
    - `effiq_capacity_scout`
 3. Wait for all three collectors. Pass only their normalized Markdown envelopes forward; do not copy raw tool output into the main context.
 4. If either required Jira collector returns `BLOCKED`, stop and return an actionable blocked result. Jira `PARTIAL` may continue with a visible risk. Calendar or Tasks `UNAVAILABLE` must not block the workflow.
-5. Deduplicate Jira evidence by issue key, then spawn `effiq_daily_analyst` with only the normalized collector outputs and the prioritization rules in this skill.
-6. Validate the analyst ranking against collector evidence and produce the final output contract below. The primary agent owns the final decision.
+5. Deduplicate Jira evidence by issue key, apply the Jira eligibility invariant below, then spawn `effiq_daily_analyst` with only the eligible normalized collector outputs and the prioritization rules in this skill.
+6. Validate the analyst ranking and every final output section against collector evidence and the same eligibility invariant. Remove any ineligible issue before producing the final output contract below. The primary agent owns the final decision.
 
 Fallback rules are explicit:
 
@@ -57,7 +57,14 @@ Use only sources relevant to the request:
 
 If a source is unavailable, say so in `Missing context` and continue.
 
-The default Jira scope is active work assigned to the current user across accessible projects. Include watched or unassigned work only when a concrete review, blocker, deadline, or waiting-on-me signal makes it relevant. Each Jira collector may inspect at most 100 candidates and must return `PARTIAL` with total and processed counts when the result set is larger.
+The default Jira scope is active work assigned to the current user across accessible projects. Include watched, unassigned, or other-assignee work only when a concrete review, blocker, deadline requiring the user's action, or waiting-on-me signal makes it relevant. Each Jira collector may inspect at most 100 candidates and must return `PARTIAL` with total and processed counts when the result set is larger.
+
+Apply this Jira eligibility invariant before analyst handoff and again during final validation:
+
+- An issue assigned to the current user is eligible when it contributes active-work or flow evidence.
+- An issue not assigned to the current user is eligible only when evidence shows an explicit review or action requested from the user, an observed relationship blocking the user's active work, or an escalation owned by the user.
+- Priority, status, due date, or recent activity alone does not make another user's issue eligible.
+- Remove an ineligible issue entirely; do not retain it under `Waiting on others`, `Not today`, risks, or supporting candidates. Preserve only aggregate coverage limits such as total and processed counts.
 
 ## Prioritization Heuristics
 
@@ -78,7 +85,7 @@ Apply:
 
 ## Bottleneck Filters
 
-- Separate `waiting on me` from `waiting on others`; prioritize only the former unless escalation is needed.
+- Separate `waiting on me` from `waiting on others`; include `waiting on others` only when it blocks eligible work owned by the user or requires escalation by the user.
 - Treat `In Review`, `Waiting for Staging`, `Waiting for Prod`, and `On QA` as flow states: recommend review response, verification, ping, or escalation before new development.
 - Down-rank old due dates, backlog/open issues, and labels like `exclude` unless they affect active team flow.
 - If many issues are assigned to the user, prefer clearing the smallest high-impact bottleneck over starting another task.
