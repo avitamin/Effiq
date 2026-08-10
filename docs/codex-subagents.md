@@ -6,7 +6,9 @@ This workflow is separate from the Tauri review runner. It uses native Codex sub
 
 ## Current Acceptance Status
 
-The tracked role definitions, TOML, fixture schema, scorer, typecheck, and existing unit tests pass locally. An interactive CLI smoke on Codex CLI 0.146.0 successfully spawned `effiq_jira_work_scout` as a real child thread and exposed the configured `gpt-5.6-luna` model with low reasoning. This proves one custom role can load and route in the trusted project.
+The role definitions, TOML, fixture schema, scorer, typecheck, and existing unit tests passed locally for the baseline before the staging delivery-risk contract was added. The new contract received text-only review on 2026-08-06; fixtures and scorer were not changed, and no model-based A/B or live Jira smoke was run for the new behavior. Do not treat the earlier quality result as runtime acceptance of the staging classification or cleanup ranking.
+
+An interactive CLI smoke on Codex CLI 0.146.0 successfully spawned `effiq_jira_work_scout` as a real child thread and exposed the configured `gpt-5.6-luna` model with low reasoning. This proves one custom role can load and route in the trusted project, but does not validate the new staging behavior.
 
 The isolated `review-blocker` frozen smoke produced a non-inferior 8/8 score for both the single-Sol baseline and staged pipeline after the canonical flow contract preserved explicit effort evidence. The complete five-fixture gain gate has not been run.
 
@@ -47,12 +49,25 @@ The primary Sol thread performs this fixed sequence:
 1. Resolve the date, `Europe/Samara` timezone, current Jira user, and any prompt-supplied project or sprint filters.
 2. Spawn the three collectors in parallel and wait for their normalized Markdown envelopes.
 3. Stop if either Jira collector is `BLOCKED`; continue with a visible risk for Jira `PARTIAL` or optional-source `UNAVAILABLE`.
-4. Deduplicate Jira evidence by issue key and send only normalized summaries to the Terra analyst.
-5. Validate the analyst result and render the final `effiq-daily-focus` output in the Sol thread.
+4. Deduplicate Jira evidence by issue key, apply the user-relevance invariant from the skill, and send only eligible normalized summaries to the Terra analyst.
+5. Validate the analyst result against the same invariant and render the final `effiq-daily-focus` output in the Sol thread.
 
 Use `/agent` in the CLI or the background-agent panel in supported clients to inspect child threads. A role file parsing successfully is not runtime proof: verify the effective child name, model, reasoning effort, and sandbox in thread metadata.
 
 Never accept an empty `wait` call or a parent-authored role summary as evidence that a child ran. Each successful spawn must expose a real child thread identifier before the primary waits for results.
+
+## Staging Delivery-Risk Contract
+
+For every user-relevant issue in `Waiting for Staging`, the Jira flow collector inspects structured issue links and the linked issues' type and status category. It does not infer release membership from descriptions or comments, and issue-link type or direction does not affect membership.
+
+- `active_cr`: at least one linked issue has type `Change Request` and is outside the completed status category.
+- `no_cr`: there is no linked issue of type `Change Request`.
+- `closed_cr_only`: every linked Change Request is completed.
+- `unknown`: relationship fields are missing or incomplete; the collector returns `PARTIAL` instead of treating the issue as unlinked.
+
+`no_cr` and `closed_cr_only` are observed delivery risks because staging-ready work has no active release route and may be lost. They are not proof of a current downstream blocker. The analyst groups all cleanup-eligible risks into one `Staging delivery cleanup` candidate, orders its issue keys from the oldest update to the newest with missing dates last, and ranks it after observed active blockers but before ordinary implementation. The recommended read-only action is to link the issue to an appropriate active Change Request or, for a hotfix, confirm staging readiness and the rollout owner.
+
+Daily Focus includes only issues assigned to the current user and other issues with explicit evidence that the user's delivery decision or action is awaited. A relationship that merely blocks the user's work does not make another user's staging route part of the cleanup. Blocker Radar may inspect broader team-visible work only when the user explicitly requests that scope.
 
 ## Status and Fallback Rules
 

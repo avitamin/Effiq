@@ -26,6 +26,7 @@ Use available MCP/tools selectively:
 - Jira issue status: Blocked, In Progress, In Review, Waiting, Open, Done.
 - Issue age: long time in current status, stale updates, old pull requests, or no recent activity.
 - Dependencies: linked issues, parent/child issues, blockers, duplicate chains, release or sprint dependencies.
+- Staging delivery route: for `Waiting for Staging`, inspect structured issue links plus the linked issues' type and status category.
 - Ownership: assigned-to-user work, issues waiting on the user, watched issues, review requests, mentions in comments if available.
 - Due dates and priority: overdue, due soon, release-critical, customer-impacting.
 - Development info: pull requests, branches, commits, review status if Jira exposes it.
@@ -37,16 +38,21 @@ If exact blocker links are unavailable, infer cautiously from status names, labe
 
 Order blockers by:
 
-1. Whether the user is blocking team flow and can unblock it today.
-2. Number or importance of downstream issues affected.
-3. Time sensitivity: due date, sprint boundary, release risk, promised review.
-4. Staleness: no owner movement or no update after a reasonable interval.
-5. Cost of delay versus effort to clarify or resolve.
+1. Observed active blockers, especially when the user can unblock team flow today.
+2. Staging delivery risks that can be lost because they have no active Change Request.
+3. Number or importance of downstream issues affected.
+4. Time sensitivity: due date, sprint boundary, release risk, promised review.
+5. Staleness: no owner movement or no update after a reasonable interval.
+6. Cost of delay versus effort to clarify or resolve.
 
 ## Noise Filters
 
 - Do not classify old backlog/open issues as blockers only because their due date is overdue.
-- Treat review, QA, staging, and prod queues as blockers only when there is a concrete owner action, missing decision, or escalation need.
+- Treat review, QA, staging, and prod queues as blockers only when there is a concrete owner action, missing decision, or escalation need, except for the explicit orphan-staging delivery risk below.
+- For `Waiting for Staging`, classify the route as `active_cr`, `no_cr`, `closed_cr_only`, or `unknown` using linked issue type and status category. Link type and direction do not matter; descriptions and comments are not release membership evidence.
+- Report `no_cr` and `closed_cr_only` under `Likely blockers` as observed delivery risks, not `Critical blockers`, unless separate evidence proves an active blocking mechanism. Recommend linking to an appropriate active Change Request or, for a hotfix, confirming staging readiness and the rollout owner.
+- Do not flag `active_cr` on status alone. Treat missing relationship fields as `unknown` and visible missing context, never as proof that no active Change Request exists.
+- Keep the default search centered on work relevant to the user. Expand an orphan-staging search to broader team-visible work only when the user explicitly requests that scope.
 - Down-rank `exclude`, hold-like, or archived work unless it blocks active delivery.
 
 ## Output Contract

@@ -50,7 +50,7 @@ Fallback rules are explicit:
 
 Use only sources relevant to the request:
 
-- Jira: assigned issues, watched issues, in-progress work, blocked or stale issues, due dates, priority, status age, links, changelog, development info, and review-related signals.
+- Jira: assigned issues, watched issues, in-progress work, blocked or stale issues, due dates, priority, status age, links and linked issue types/status categories for `Waiting for Staging`, changelog, development info, and review-related signals.
 - Calendar: today's meetings, focus blocks, hard deadlines, and remaining usable work capacity.
 - Tasks: dated or high-priority personal tasks, carry-over tasks, and reminders.
 - Repo: current branch/status only if the user asks to align the daily plan with local development work.
@@ -71,10 +71,11 @@ Apply this Jira eligibility invariant before analyst handoff and again during fi
 Rank work by practical impact:
 
 1. Prevent or remove a bottleneck where the user is blocking another person, QA, release, review, staging, or production movement.
-2. Clarify ownership when an item may be waiting on the user but the next action is ambiguous.
-3. Meet a real deadline today or before the next planning checkpoint.
-4. Finish already-started high-value work before starting more work.
-5. Handle small coordination tasks only when they prevent future delay.
+2. Clarify the delivery route for user-relevant `Waiting for Staging` work that has no active Change Request.
+3. Clarify ownership when an item may be waiting on the user but the next action is ambiguous.
+4. Meet a real deadline today or before the next planning checkpoint.
+5. Finish already-started high-value work before starting more work.
+6. Handle small coordination tasks only when they prevent future delay.
 
 Apply:
 
@@ -86,7 +87,12 @@ Apply:
 ## Bottleneck Filters
 
 - Separate `waiting on me` from `waiting on others`; include `waiting on others` only when it blocks eligible work owned by the user or requires escalation by the user.
-- Treat `In Review`, `Waiting for Staging`, `Waiting for Prod`, and `On QA` as flow states: recommend review response, verification, ping, or escalation before new development.
+- Treat `In Review`, `Waiting for Prod`, and `On QA` as flow states: prioritize them before new development only when there is a concrete user action, missing decision, or owned escalation.
+- For an eligible `Waiting for Staging` issue, use the collector's delivery-route classification. `no_cr` means no linked issue of type `Change Request`; `closed_cr_only` means every linked Change Request is in the completed status category; `active_cr` means at least one linked Change Request is not completed. Link type and direction do not matter, and descriptions or comments do not establish membership.
+- Include a staging item in the daily cleanup only when it is assigned to the current user or evidence explicitly shows that the user's delivery decision or action is awaited. Do not include another user's staging route merely because the issue blocks the user's work.
+- Treat qualifying `no_cr` and `closed_cr_only` items as observed delivery risks that require clarification today, even without proof of an active downstream blocker. Group them into one `Staging delivery cleanup` item after observed active blockers and before ordinary implementation; include the count and issue keys ordered by updated date from oldest to newest, with missing dates last and visible as missing context.
+- Recommend linking each issue to an appropriate active Change Request or, for a hotfix, confirming staging readiness and the rollout owner. Stay read-only and do not claim that the link or rollout was performed.
+- Treat incomplete staging relationship data as `unknown`, keep it in `Risks`, and preserve collector `PARTIAL`; never interpret missing fields as `no_cr`.
 - Down-rank old due dates, backlog/open issues, and labels like `exclude` unless they affect active team flow.
 - If many issues are assigned to the user, prefer clearing the smallest high-impact bottleneck over starting another task.
 

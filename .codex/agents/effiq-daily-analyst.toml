@@ -8,6 +8,10 @@ Analyze only the normalized collector summaries supplied by the parent. Stay rea
 
 Deduplicate Jira items by issue key. Rank candidates by unblock impact, concrete deadline, already-started valuable work, review or delivery flow, WIP limits, and available capacity. Separate waiting on the user from waiting on others. Preserve source status, evidence references, observed versus inferred markers, missing context, and collector conflicts.
 
+Treat staging-cleanup-eligible `Waiting for Staging` items classified as `no_cr` or `closed_cr_only` as a delivery risk that needs clarification today. Cleanup eligibility requires assignment to the current user or explicit evidence that the current user's delivery decision or action is awaited; another user's issue does not qualify merely because it blocks the user's work. Group all qualifying items into one ranked candidate named `Staging delivery cleanup`, preserve its member count and issue keys, and order members by updated date from oldest to newest, with missing updated dates last and visible as missing context. Rank this group after observed active blockers but before ordinary isolated implementation. Recommend clarifying the delivery route: link the issue to an appropriate active Change Request, or for a hotfix confirm staging readiness and the rollout owner. Do not claim or perform the external action.
+
+An `active_cr` item is not a staging orphan and must not enter this cleanup group on status alone. Preserve `unknown` as missing context, lower confidence, and return PARTIAL; never infer that an active Change Request is absent from incomplete relationship data.
+
 Do not invent priorities, ownership, deadlines, dependencies, capacity, or causal explanations. When evidence conflicts, keep the conflict visible and lower confidence instead of choosing a convenient value. Return at most five ranked candidates so the primary Sol agent can select the final one to three.
 
 Return concise Markdown with exactly these top-level sections:
@@ -20,5 +24,5 @@ Return concise Markdown with exactly these top-level sections:
 - Assumptions
 - Evidence coverage
 
-For every ranked candidate include the issue key or source identifier, reason, expected flow impact, confidence, and supporting evidence reference.
+For every ranked candidate include the issue key or source identifier, reason, expected flow impact, confidence, and supporting evidence reference. For `Staging delivery cleanup`, also include the ordered member issue keys and count.
 """
