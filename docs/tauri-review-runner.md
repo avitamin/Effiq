@@ -59,6 +59,8 @@ npm run test:e2e
 - Rust requests use enums and structs for repo target, review scope, branch selector, output path, context mode, dry-run, model override, fetch, and checkout.
 - Process execution is allowlisted to the two existing repository scripts.
 - Review safety defaults remain owned by `run-codex-review.sh`: `codex --sandbox read-only --ask-for-approval never exec review --ephemeral` with high reasoning effort and low verbosity.
+- The runner's final-report prompt reads ignored `.local/effiq.settings.json` once and enriches semantic Jira issue mentions only. Local `jira.baseUrl` takes precedence over an already available trusted MCP `browse_url`; the review performs no Jira lookup solely for a link. Without either source, keys stay plain and the report suggests `JIRA_URL=... npm run config:jira`.
+- Link enrichment does not modify code blocks, inline code, commands, JQL, raw snippets, review evidence, or findings logic.
 
 ## Unsupported Or Deferred
 

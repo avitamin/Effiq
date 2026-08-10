@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "node scripts/dev-server.mjs",
     "build": "node scripts/build.mjs",
-    "typecheck": "node --check src/main.js && node --check src/validation.js && node --check src/uiState.js && node --check src/tauriApi.js && node --check scripts/build.mjs && node --check scripts/dev-server.mjs && node --check .agents/skills/effiq-daily-focus/scripts/run-ab-smoke.mjs",
-    "test": "node --test src/*.test.js",
+    "config:jira": "node scripts/configure-jira.mjs",
+    "typecheck": "node --check src/main.js && node --check src/validation.js && node --check src/uiState.js && node --check src/tauriApi.js && node --check scripts/build.mjs && node --check scripts/configure-jira.mjs && node --check scripts/dev-server.mjs && node --check .agents/skills/effiq-daily-focus/scripts/run-ab-smoke.mjs",
+    "test": "node --test src/*.test.js scripts/*.test.js",
     "test:daily-focus-ab": "node .agents/skills/effiq-daily-focus/scripts/run-ab-smoke.mjs",
     "tauri": "cargo tauri"
   }

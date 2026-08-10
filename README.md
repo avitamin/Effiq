@@ -72,6 +72,20 @@ npm run tauri build -- --debug
 
 The app delegates review and branch operations to the existing scripts through typed Rust commands. It does not expose generic shell execution to the frontend.
 
+## Jira Links In Reports
+
+Configure the local Jira base URL without adding a real deployment URL to Git:
+
+```bash
+JIRA_URL=https://jira.example.com npm run config:jira
+```
+
+The command validates an HTTP(S) URL without credentials, query, or fragment; preserves an optional Jira context path; removes trailing slashes; merge-updates only `jira.baseUrl`; and atomically writes ignored `.local/effiq.settings.json` with mode `0600`. The tracked `effiq.settings.example.json` documents the shape.
+
+User-visible Effiq skill and code-review reports read this local setting once and use it for Jira links. Local `jira.baseUrl` takes precedence over a trusted MCP `browse_url` already available in collected evidence. A workflow does not make a new Jira lookup only to enrich links. If neither source is available, issue keys remain plain and the report suggests the setup command; missing links never block the useful Jira result.
+
+Link enrichment applies only to semantic issue mentions in final Markdown prose, lists, and tables. It does not rewrite fenced code, inline code, commands, JQL, raw snippets, collector envelopes, analyst handoffs, or ranking inputs.
+
 ## Documentation
 
 - `AGENTS.md` contains compact guidance for future Codex/OpenCode sessions.

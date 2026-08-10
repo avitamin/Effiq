@@ -222,7 +222,9 @@ run_for_target() {
   local default_base="$3"
   local resolved_out_path
   local scope_args=()
+  local final_report_instruction
   mapfile -t scope_args < <(scope_args_for_repo "$default_base")
+  final_report_instruction="For the final user-visible Markdown report, read $repo_root/.local/effiq.settings.json once. Link every semantic Jira issue mention in prose, lists, and tables as [AG-123]({baseUrl}/browse/AG-123), preferring local jira.baseUrl and otherwise using only a trusted MCP browse_url already present in review evidence. Do not perform a new Jira lookup only for a link. Do not rewrite fenced code, inline code, commands, JQL, or raw snippets. If no URL is available, keep plain keys and add one non-blocking setup note: JIRA_URL=... npm run config:jira."
 
   if [[ "$repo_selection" == "all" ]]; then
     resolved_out_path="$(resolve_path "$out_path")/$label.md"
@@ -264,6 +266,8 @@ run_for_target() {
   if [[ -n "$title" ]]; then
     cmd+=(--title "$title")
   fi
+
+  cmd+=("$final_report_instruction")
 
   if [[ "$dry_run" == true ]]; then
     quote_command "${cmd[@]}"

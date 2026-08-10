@@ -68,3 +68,5 @@ Return concise Markdown with:
 - `No blocker found`: include this only when the checked sources show no meaningful blocker.
 
 For each issue, include key, summary, current status, why it blocks, and recommended next action when known.
+
+Before rendering the final answer, read `.local/effiq.settings.json` once. In prose, lists, and tables, render every semantic Jira issue mention as `[AG-123]({baseUrl}/browse/AG-123)`. Prefer local `jira.baseUrl`; otherwise use a trusted MCP `browse_url` already present in gathered evidence. Do not perform a new Jira lookup only to obtain a link. Do not rewrite fenced code, inline code, commands, JQL, or raw snippets. If neither URL source is available, keep plain issue keys and add one non-blocking setup note: `JIRA_URL=... npm run config:jira`.

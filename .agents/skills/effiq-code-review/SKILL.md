@@ -92,6 +92,8 @@ Write concise Markdown with:
 
 When no issue is found, say that clearly and still report residual risk or test gaps.
 
+Before rendering the final report, read `.local/effiq.settings.json` once. In prose, lists, and tables, render every semantic Jira issue mention as `[AG-123]({baseUrl}/browse/AG-123)`. Prefer local `jira.baseUrl`; otherwise use a trusted MCP `browse_url` already present in review evidence. Do not perform a new Jira lookup only to obtain a link. Do not rewrite fenced code, inline code, commands, JQL, or raw snippets. If neither URL source is available, keep plain issue keys and add one non-blocking setup note: `JIRA_URL=... npm run config:jira`.
+
 ## Missing Evidence Behavior
 
 - If a finding depends on code outside the diff, inspect the smallest nearby context needed to validate it.

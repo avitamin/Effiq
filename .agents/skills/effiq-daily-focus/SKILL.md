@@ -109,3 +109,5 @@ Return concise Markdown with these sections:
 - `Next action`: the first concrete action the user should take.
 
 Do not include generic time-management advice unless it directly changes the plan.
+
+Before rendering the final answer, read `.local/effiq.settings.json` once. In prose, lists, and tables, render every semantic Jira issue mention as `[AG-123]({baseUrl}/browse/AG-123)`. Prefer local `jira.baseUrl`; otherwise use a trusted MCP `browse_url` already present in gathered evidence. Do not perform a new Jira lookup only to obtain a link. Do not rewrite fenced code, inline code, commands, JQL, or raw snippets. If neither URL source is available, keep plain issue keys and add one non-blocking setup note: `JIRA_URL=... npm run config:jira`.
