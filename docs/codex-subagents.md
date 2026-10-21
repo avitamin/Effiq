@@ -14,12 +14,14 @@ The isolated `review-blocker` frozen smoke produced a non-inferior 8/8 score for
 
 Full runtime acceptance is still gated as of 2026-08-05. Non-interactive `codex exec` probes emitted empty `wait` calls and parent-authored substitutes instead of child spawn events, and the other three custom roles have not yet passed the same interactive metadata check. Treat the complete native swarm as experimental until all four child roles expose real thread identifiers and effective model, effort, and sandbox metadata. Do not run live Jira smoke before that routing gate.
 
+The 2026-10-21 model update configures collectors as `gpt-6-luna`/low and the analyst and primary as `gpt-6.1-sol`/medium. Native routing, model-based A/B, and live Jira smoke for this mapping are NOT RUN. The historical results above apply to the previous GPT-5.6 mapping only. Start a fresh session to load the updated role definitions.
+
 ## Prerequisites
 
 - Open Effiq as a trusted Codex project so `.codex/config.toml` and `.codex/agents/*.toml` can load.
 - Use Codex CLI `0.146.0` or newer with the stable `multi_agent` feature enabled.
 - Start the primary with `--sandbox read-only` and do not use `--yolo`. Live parent permission overrides can supersede a custom role's default sandbox. Treat any child whose effective sandbox is not read-only as a failed security and routing gate.
-- Select `gpt-5.6-sol` with medium reasoning for the primary thread. The `gpt-5.6` alias also routes to Sol, but the explicit model makes runtime verification clearer.
+- Select `gpt-6.1-sol` with medium reasoning for the primary thread.
 - Configure Jira locally through `.codex/config.toml` with `READ_ONLY_MODE="true"`. Keep URLs, tokens, OAuth state, and machine-local paths out of tracked files.
 - Calendar and Tasks connectors are optional. Their absence must appear as missing context rather than block Jira-based planning.
 
@@ -29,16 +31,16 @@ The tracked `.codex/config.example.toml` shows the non-secret model and concurre
 
 | Role | Model and effort | Responsibility | Required |
 | --- | --- | --- | --- |
-| `effiq_jira_work_scout` | Luna / low | Active assigned work, deadlines, and recent movement | Yes |
-| `effiq_jira_flow_scout` | Luna / low | Blockers, dependencies, reviews, delivery queues, and ownership | Yes |
-| `effiq_capacity_scout` | Luna / low | Today's Calendar and Tasks capacity | No |
-| `effiq_daily_analyst` | Terra / medium | Cross-source deduplication, ranking, conflicts, and evidence coverage | Yes after collection |
+| `effiq_jira_work_scout` | `gpt-6-luna` / low | Active assigned work, deadlines, and recent movement | Yes |
+| `effiq_jira_flow_scout` | `gpt-6-luna` / low | Blockers, dependencies, reviews, delivery queues, and ownership | Yes |
+| `effiq_capacity_scout` | `gpt-6-luna` / low | Today's Calendar and Tasks capacity | No |
+| `effiq_daily_analyst` | `gpt-6.1-sol` / medium | Cross-source deduplication, ranking, conflicts, and evidence coverage | Yes after collection |
 
 All roles use `sandbox_mode = "read-only"`. Standalone files under `.codex/agents/` are the role definitions; do not duplicate them with `[agents.<name>]` mappings. The top-level `[agents]` table controls only enablement, concurrency, and defaults.
 
 ## Run the Workflow
 
-Start a fresh Sol thread in the Effiq workspace and ask for a daily focus plan, for example:
+Start a fresh `gpt-6.1-sol` thread in the Effiq workspace and ask for a daily focus plan, for example:
 
 ```text
 Use $effiq-daily-focus and the fixed project-scoped swarm to decide what I should prioritize today. Jira is required; use Calendar and Tasks if available. Stay read-only.
@@ -49,7 +51,7 @@ The primary Sol thread performs this fixed sequence:
 1. Resolve the date, `Europe/Samara` timezone, current Jira user, and any prompt-supplied project or sprint filters.
 2. Spawn the three collectors in parallel and wait for their normalized Markdown envelopes.
 3. Stop if either Jira collector is `BLOCKED`; continue with a visible risk for Jira `PARTIAL` or optional-source `UNAVAILABLE`.
-4. Deduplicate Jira evidence by issue key, apply the user-relevance invariant from the skill, and send only eligible normalized summaries to the Terra analyst.
+4. Deduplicate Jira evidence by issue key, apply the user-relevance invariant from the skill, and send only eligible normalized summaries to the Sol analyst.
 5. Validate the analyst result against the same invariant and render the final `effiq-daily-focus` output in the Sol thread.
 
 Use `/agent` in the CLI or the background-agent panel in supported clients to inspect child threads. A role file parsing successfully is not runtime proof: verify the effective child name, model, reasoning effort, and sandbox in thread metadata.
@@ -74,8 +76,8 @@ Daily Focus includes only issues assigned to the current user and other issues w
 - Jira collectors return `OK`, `PARTIAL`, or `BLOCKED` and process at most 100 candidates each.
 - The capacity collector reports Calendar and Tasks independently and returns `OK`, `PARTIAL`, or `UNAVAILABLE`.
 - One transient read failure may be retried once with the same role and model.
-- Only a Luna rejection at spawn may use a fresh generic Terra/low child with a copied identical role contract. Do not respawn the named Luna role and expect a model override to win. The final answer must contain `MODEL_FALLBACK`.
-- If the Terra analyst cannot spawn, the Sol primary performs ranking and reports `ANALYST_FALLBACK`.
+- Only a Luna rejection at spawn may use a fresh generic `gpt-6.1-sol`/low child with a copied identical role contract. Do not respawn the named Luna role and expect a model override to win. The final answer must contain `MODEL_FALLBACK`.
+- If the Sol analyst cannot spawn, the Sol primary performs ranking and reports `ANALYST_FALLBACK`.
 - Authentication, permission, connector, and data errors never trigger model fallback.
 - Missing Sol or required Jira access makes the workflow `BLOCKED`; do not label a single-agent result as a swarm result.
 
@@ -119,7 +121,7 @@ Run the complete frozen quality comparison explicitly when model usage and laten
 npm run test:daily-focus-ab
 ```
 
-The harness compares a single Sol baseline with an isolated model-stage pipeline across five frozen fixtures. It launches three parallel Luna/low collectors with disjoint source slices, passes only their normalized envelopes to a Terra/medium analyst, and gives the final Sol/medium renderer only the envelopes and analyst proposal. The final Sol never receives the raw fixture. A selected-fixture smoke requires non-inferiority and safety. Full-matrix acceptance additionally requires a useful evidence, actionability, or missing-context gain on at least three of five fixtures.
+The harness compares a single `gpt-6.1-sol`/medium baseline with an isolated model-stage pipeline across five frozen fixtures. It launches three parallel `gpt-6-luna`/low collectors with disjoint source slices, passes only their normalized envelopes to a `gpt-6.1-sol`/medium analyst, and gives the final `gpt-6.1-sol`/medium renderer only the envelopes and analyst proposal. The final Sol never receives the raw fixture. A selected-fixture smoke requires non-inferiority and safety. Full-matrix acceptance additionally requires a useful evidence, actionability, or missing-context gain on at least three of five fixtures.
 
 This process-level A/B validates the tracked role contracts, selected models, and bounded data flow; it is not evidence of native Codex child-thread routing. Each evaluated role receives its canonical `developer_instructions` directly from the tracked TOML. Every stage runs from an empty temporary cwd, and the harness rejects any tool call. Verify native routing separately in an interactive session: spawn each named custom role, inspect it with `/agent`, and record its real child thread identifier plus effective name, model, reasoning effort, and read-only sandbox. If the UI omits a field, use persisted child runtime metadata or a safe denial probe; never use the child's self-report as proof. Live Jira data is not part of A/B because it changes between runs; perform a separate read-only live smoke only after both gates pass.
 
@@ -128,4 +130,4 @@ Frozen runs use `--ignore-user-config`, explicit model names, and read-only sand
 Official references:
 
 - [Codex subagents](https://learn.chatgpt.com/docs/agent-configuration/subagents)
-- [OpenAI GPT-5.6 model guidance](https://developers.openai.com/api/docs/guides/latest-model)
+- [OpenAI GPT-6 model guidance](https://developers.openai.com/api/docs/guides/latest-model)

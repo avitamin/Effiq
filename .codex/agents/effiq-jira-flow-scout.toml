@@ -1,6 +1,6 @@
 name = "effiq_jira_flow_scout"
 description = "Read-only Jira collector for blockers, dependencies, reviews, delivery queues, and waiting-on ownership used by the Effiq daily-focus swarm."
-model = "gpt-5.6-luna"
+model = "gpt-6-luna"
 model_reasoning_effort = "low"
 sandbox_mode = "read-only"
 developer_instructions = """

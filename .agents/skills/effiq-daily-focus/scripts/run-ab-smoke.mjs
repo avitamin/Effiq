@@ -59,19 +59,19 @@ const roleContracts = {
 const collectorStages = [
   {
     id: "jira-work",
-    model: "gpt-5.6-luna",
+    model: "gpt-6-luna",
     input: ({ jira_work: jiraWork }) => ({ jira_work: jiraWork }),
     contract: roleContracts.jiraWork,
   },
   {
     id: "jira-flow",
-    model: "gpt-5.6-luna",
+    model: "gpt-6-luna",
     input: ({ jira_flow: jiraFlow }) => ({ jira_flow: jiraFlow }),
     contract: roleContracts.jiraFlow,
   },
   {
     id: "capacity",
-    model: "gpt-5.6-luna",
+    model: "gpt-6-luna",
     input: ({ calendar, tasks }) => ({ calendar, tasks }),
     contract: roleContracts.capacity,
   },
@@ -177,7 +177,7 @@ ${JSON.stringify(input, null, 2)}`;
 }
 
 function analystPrompt(collectorOutputs) {
-  return `You are the Terra analyst in an Effiq evaluation.
+  return `You are the Sol analyst in an Effiq evaluation.
 ${commonSafety()}
 Apply this canonical tracked role contract:
 ${roleContracts.analyst}
@@ -278,7 +278,7 @@ async function runFixture(fixture) {
   const baselineAnswer = await runModel({
     fixtureId: fixture.id,
     stage: "baseline",
-    model: "gpt-5.6-sol",
+    model: "gpt-6.1-sol",
     effort: "medium",
     prompt: baselinePrompt(fixture),
   });
@@ -298,14 +298,14 @@ async function runFixture(fixture) {
   const analystOutput = await runModel({
     fixtureId: fixture.id,
     stage: "swarm-analyst",
-    model: "gpt-5.6-terra",
+    model: "gpt-6.1-sol",
     effort: "medium",
     prompt: analystPrompt(collectorOutputs),
   });
   const swarmAnswer = await runModel({
     fixtureId: fixture.id,
     stage: "swarm-final",
-    model: "gpt-5.6-sol",
+    model: "gpt-6.1-sol",
     effort: "medium",
     prompt: rendererPrompt(collectorOutputs, analystOutput),
   });
