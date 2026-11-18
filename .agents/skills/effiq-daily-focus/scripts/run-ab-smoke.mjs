@@ -278,7 +278,7 @@ async function runFixture(fixture) {
   const baselineAnswer = await runModel({
     fixtureId: fixture.id,
     stage: "baseline",
-    model: "gpt-6.1-sol",
+    model: "gpt-6.2-sol",
     effort: "medium",
     prompt: baselinePrompt(fixture),
   });
@@ -298,14 +298,14 @@ async function runFixture(fixture) {
   const analystOutput = await runModel({
     fixtureId: fixture.id,
     stage: "swarm-analyst",
-    model: "gpt-6.1-sol",
+    model: "gpt-6.2-sol",
     effort: "medium",
     prompt: analystPrompt(collectorOutputs),
   });
   const swarmAnswer = await runModel({
     fixtureId: fixture.id,
     stage: "swarm-final",
-    model: "gpt-6.1-sol",
+    model: "gpt-6.2-sol",
     effort: "medium",
     prompt: rendererPrompt(collectorOutputs, analystOutput),
   });

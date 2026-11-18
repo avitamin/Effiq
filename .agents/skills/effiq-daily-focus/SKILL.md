@@ -23,7 +23,7 @@ Primary objective: help the user avoid becoming a bottleneck for team flow. Pers
 
 ## Multi-Agent Workflow
 
-Use the fixed project-scoped swarm when subagent tools are available and the primary agent is running on `gpt-6.1-sol`. Do not silently substitute another primary model.
+Use the fixed project-scoped swarm when subagent tools are available and the primary agent is running on `gpt-6.2-sol`. Do not silently substitute another primary model.
 
 Before spawning, verify that the effective parent sandbox is read-only and that no live permission override such as `--yolo` is active. The parent and every child must remain effectively read-only; if runtime metadata or a safe denial probe shows otherwise, return `BLOCKED`.
 
@@ -40,7 +40,7 @@ Before spawning, verify that the effective parent sandbox is read-only and that 
 Fallback rules are explicit:
 
 - Retry one transient tool read failure once with the same role and model.
-- Only a Luna spawn rejection may use a fresh generic `gpt-6.1-sol`/low child with a copied identical role contract. Do not respawn the named Luna role and expect a model override to win; add `MODEL_FALLBACK` to `Risks`.
+- Only a Luna spawn rejection may use a fresh generic `gpt-6.2-sol`/low child with a copied identical role contract. Do not respawn the named Luna role and expect a model override to win; add `MODEL_FALLBACK` to `Risks`.
 - If the Sol analyst cannot spawn, perform ranking in the primary Sol thread and add `ANALYST_FALLBACK` to `Risks`.
 - Tool, authentication, permission, or data failures are not model fallback triggers.
 - If subagent tools or the Sol primary are unavailable, return `BLOCKED`; do not present a single-agent result as a swarm result.
