@@ -23,7 +23,7 @@ Primary objective: help the user avoid becoming a bottleneck for team flow. Pers
 
 ## Multi-Agent Workflow
 
-Use the fixed project-scoped swarm when subagent tools are available and the primary agent is running on `gpt-6.2-sol`. Do not silently substitute another primary model.
+Use the fixed project-scoped swarm when subagent tools are available and the primary agent is running on `gpt-6.2-sol`. If either prerequisite is missing, return `BLOCKED` with the primary role and cause.
 
 Before spawning, verify that the effective parent sandbox is read-only and that no live permission override such as `--yolo` is active. The parent and every child must remain effectively read-only; if runtime metadata or a safe denial probe shows otherwise, return `BLOCKED`.
 
@@ -32,18 +32,16 @@ Before spawning, verify that the effective parent sandbox is read-only and that 
    - `effiq_jira_work_scout`
    - `effiq_jira_flow_scout`
    - `effiq_capacity_scout`
-3. Wait for all three collectors. Pass only their normalized Markdown envelopes forward; do not copy raw tool output into the main context.
+3. Apply the spawn failure rules below, then wait for the collectors that started. Pass only their normalized Markdown envelopes forward; do not copy raw tool output into the main context.
 4. If either required Jira collector returns `BLOCKED`, stop and return an actionable blocked result. Jira `PARTIAL` may continue with a visible risk. Calendar or Tasks `UNAVAILABLE` must not block the workflow.
 5. Deduplicate Jira evidence by issue key, apply the Jira eligibility invariant below, then spawn `effiq_daily_analyst` with only the eligible normalized collector outputs and the prioritization rules in this skill.
 6. Validate the analyst ranking and every final output section against collector evidence and the same eligibility invariant. Remove any ineligible issue before producing the final output contract below. The primary agent owns the final decision.
 
-Fallback rules are explicit:
+Failure handling:
 
 - Retry one transient tool read failure once with the same role and model.
-- Only a Luna spawn rejection may use a fresh generic `gpt-6.2-sol`/low child with a copied identical role contract. Do not respawn the named Luna role and expect a model override to win; add `MODEL_FALLBACK` to `Risks`.
-- If the Sol analyst cannot spawn, perform ranking in the primary Sol thread and add `ANALYST_FALLBACK` to `Risks`.
-- Tool, authentication, permission, or data failures are not model fallback triggers.
-- If subagent tools or the Sol primary are unavailable, return `BLOCKED`; do not present a single-agent result as a swarm result.
+- If either Jira collector or the analyst cannot spawn, return `BLOCKED` with the role name and the cause.
+- If the capacity collector cannot spawn, continue with Jira and report Calendar and Tasks as `UNAVAILABLE`.
 - Do not call `wait` until a spawn returns a real child thread identifier. An empty wait, a simulated role result, or a parent-authored substitute is `BLOCKED`, not successful routing.
 
 ## Context Gathering
