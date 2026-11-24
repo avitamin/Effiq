@@ -12,7 +12,7 @@
 - `README.md` owns the project overview, goals, current status, and quick-start expectations.
 - `AGENTS.md` owns compact instructions for future OpenCode sessions.
 - `docs/tauri-review-runner.md` owns durable usage, validation, and security notes for the local Tauri review runner app.
-- `docs/codex-subagents.md` owns durable usage, role routing, fallback, validation, and security notes for the Codex daily-focus swarm.
+- `docs/codex-subagents.md` owns durable usage, role routing, failure handling, validation, and security notes for the Codex daily-focus swarm.
 - `docs/repo-documentation-guide.md` owns documentation rules, source priority, verification expectations, and indexing policy.
 
 ## Verification Matrix
